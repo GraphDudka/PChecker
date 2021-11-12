@@ -7,6 +7,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from GeneratePW import GenerateWindow
 from CheckPW import CheckerWindow
+from HelpPW import HelpWindow
 
 
 class MyWidget(QMainWindow):
@@ -24,11 +25,14 @@ class MyWidget(QMainWindow):
         gener.setText('Generate PW')
         qui = self.quitbutt
         qui.setText('Quit')
+        hel = self.helpbutt
+        hel.setText('Help')
 
         dbbutt.clicked.connect(self.dbappend)
         check.clicked.connect(self.gocheck)
         gener.clicked.connect(self.gogenerate)
         qui.clicked.connect(self.out)
+        hel.clicked.connect(self.gohelp)
 
     def dbappend(self):
         con = sqlite3.connect('passwords.db')
@@ -58,6 +62,10 @@ class MyWidget(QMainWindow):
     def gocheck(self):
         self.checkwindow = CheckerWindow()
         self.checkwindow.show()
+
+    def gohelp(self):
+        self.helpwindow = HelpWindow()
+        self.helpwindow.show()
 
 
 if __name__ == '__main__':
