@@ -1,0 +1,65 @@
+import sqlite3
+import sys
+import random
+
+from PyQt5 import uic
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QPushButton
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+
+
+class GenerateWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        uic.loadUi('generatepw.ui', self)
+
+        generator = self.generbutton
+        generator.setText('Generate Password')
+
+        but = QPushButton(self)
+        but.setIcon(QIcon('copysym.jpg'))
+        but.setIconSize(QSize(20, 20))
+        but.resize(20, 20)
+        but.move(130, 115)
+
+        but.clicked.connect(self.send_to_clipboard)
+
+        generator.clicked.connect(self.generate)
+
+    def send_to_clipboard(self, data):
+        text = self.resultpw
+        cb = QApplication.clipboard()
+        cb.clear(mode=cb.Clipboard)
+        cb.setText(text.toPlainText(), mode=cb.Clipboard)
+
+    def generate(self):
+        text = self.resultpw
+
+        low = []
+        up = []
+        numnsym = []
+        res = ""
+
+        for i in range(5):
+            c = random.randint(65, 90)
+            up.append(c)
+
+        for i in range(7):
+            c = random.randint(97, 122)
+            low.append(c)
+
+        for i in range(3):
+            c = random.randint(48, 57)
+            numnsym.append(c)
+
+        c = random.randint(35, 38)
+        numnsym.append(c)
+
+        ans = low + up + numnsym
+        random.shuffle(ans)
+
+        for i in ans:
+            res += chr(i)
+
+        text.setText(res)
