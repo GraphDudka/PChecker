@@ -14,6 +14,7 @@ class CheckerWindow(QMainWindow):
         super().__init__()
 
         uic.loadUi('checkerpw.ui', self)
+        self.setWindowTitle('Checker')
 
         self.Digit.setText('Digits')
         self.Lenght.setText('Lenght')
