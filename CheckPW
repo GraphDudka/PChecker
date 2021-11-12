@@ -1,0 +1,100 @@
+import sqlite3
+import sys
+import random
+
+from PyQt5 import uic
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox
+from win10toast import ToastNotifier
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+
+
+class CheckerWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        uic.loadUi('checkerpw.ui', self)
+
+        self.Digit.setText('Digits')
+        self.Lenght.setText('Lenght')
+        self.Letter.setText('Letters')
+        self.Symbol.setText('Symbols')
+        self.Upp.setText('Upper letters')
+        self.Loww.setText('Loww letters')
+
+        check = self.CheckButt
+        check.setText('Check the Password')
+        check.clicked.connect(self.checkpw)
+
+
+
+    def checkpw(self):
+        password = self.PW.toPlainText()
+
+        result = self.result
+        digit = self.DigitBox
+        lenght = self.LenghtBox
+        letter = self.LetterBox
+        symb = self.SymbolBox
+        loww = self.LowwBox
+        upp = self.UppBox
+
+
+        res = 0
+
+        def showDialog():
+            msgBox = QMessageBox()
+            msgBox.setIcon(QMessageBox.Information)
+            msgBox.setText("Введите пароль для проверки")
+            msgBox.setWindowTitle("Пароль не введен")
+            msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+
+            returnValue = msgBox.exec()
+
+        if len(password) == 0:
+            showDialog()
+        else:
+            if len(password) < 15:
+                lenght.setText('Очень короткий пароль')
+            else:
+                lenght.setText('OK')
+                res += 1
+
+            if password.isalpha() and len(password) > 0:
+                digit.setText('Нет цифр')
+            else:
+                digit.setText("OK")
+                res += 1
+
+            if password.isalnum() and len(password) > 0:
+                symb.setText('Нет символов')
+            else:
+                symb.setText("OK")
+                res += 1
+
+            if password.isdigit() and len(password) > 0:
+                letter.setText('Нет букв')
+            else:
+                letter.setText("OK")
+                res += 1
+
+            if password == password.lower():
+                upp.setText('Нет заглавных букв')
+            else:
+                upp.setText("OK")
+                res += 1
+
+            if password == password.upper():
+                loww.setText('Нет строчных букв')
+            else:
+                loww.setText("OK")
+                res += 1
+
+            if res == 6:
+                result.setText('Пароль корректен' + '\n' + 'Сложность: Высокая')
+            elif res >= 4:
+                result.setText('Пароль не корректен' + '\n' + 'Сложность: Средняя')
+            elif res >= 2:
+                result.setText('Пароль не корректен' + '\n' + 'Сложность: Низкая')
+            else:
+                result.setText('Пароль не корректен' + '\n' + 'Сложность: Очень низкая')
