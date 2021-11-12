@@ -13,6 +13,7 @@ class GenerateWindow(QMainWindow):
         super().__init__()
 
         uic.loadUi('generatepw.ui', self)
+        self.setWindowTitle('Generator')
 
         generator = self.generbutton
         generator.setText('Generate Password')
