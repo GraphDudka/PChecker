@@ -1,0 +1,67 @@
+import sqlite3
+import sys
+
+from PyQt5 import uic
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from GeneratePW import GenerateWindow
+from CheckPW import CheckerWindow
+
+
+class MyWidget(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        uic.loadUi('pcheckermain.ui', self)
+        self.nametag.setText('Welcome To Password checker!')
+
+        dbbutt = self.dbappendbutt
+        dbbutt.setText('Append PW to DB')
+        check = self.checkbutt
+        check.setText('Check PW')
+        gener = self.generbutt
+        gener.setText('Generate PW')
+        qui = self.quitbutt
+        qui.setText('Quit')
+
+        dbbutt.clicked.connect(self.dbappend)
+        check.clicked.connect(self.gocheck)
+        gener.clicked.connect(self.gogenerate)
+        qui.clicked.connect(self.out)
+
+    def dbappend(self):
+        con = sqlite3.connect('passwords.db')
+
+        cur = con.cursor()
+        cur.execute("""CREATE TABLE IF NOT EXISTS passwordstbl(
+           password TEXT,
+           website TEXT,
+           hint TEXT);
+        """)
+
+        passwrd = self.inspass.toPlainText()
+        websit = self.inswebsite.toPlainText()
+        hinnt = self.inshint.toPlainText()
+
+        cur.execute('''INSERT INTO passwordstbl VALUES(?,?,?)''', (passwrd, websit, hinnt))
+
+        con.commit()
+
+    def out(self):
+        QApplication.quit()
+
+    def gogenerate(self):
+        self.generatewindow = GenerateWindow()
+        self.generatewindow.show()
+
+    def gocheck(self):
+        self.checkwindow = CheckerWindow()
+        self.checkwindow.show()
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = MyWidget()
+    ex.show()
+    sys.exit(app.exec())
